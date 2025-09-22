@@ -15,4 +15,8 @@ public class ProductBrandController {
     public String sayHello() {
         return "Hello World";
     }
+    @GetMapping("/docker")
+    public String createDocker(){
+        return " Hi docker" ;
+    }
 }
