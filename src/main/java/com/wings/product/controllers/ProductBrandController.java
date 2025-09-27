@@ -1,6 +1,7 @@
 package com.wings.product.controllers;
 
 import com.wings.product.Dto.ProductBrandDto;
+import com.wings.product.Entity.ProductBrandEntity;
 import com.wings.product.Services.ProductBrandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,9 @@ public class ProductBrandController {
         return " Hi docker" ;
     }
     @PostMapping("/create")
-    public ResponseEntity<?> createProductBrand(@RequestBody ProductBrandDto brandDto){
-        brandService.ProductBrandSave(brandDto);
-        return ResponseEntity.ok(brandDto);
+    public ResponseEntity<ProductBrandEntity> createProductBrand(@RequestBody ProductBrandDto brandDto){
+        ProductBrandEntity brand = brandService.ProductBrandSave(brandDto);
+        return ResponseEntity.ok(brand);
     }
     @GetMapping("/getAllBrands")
     public void getAllProductBrands(){}

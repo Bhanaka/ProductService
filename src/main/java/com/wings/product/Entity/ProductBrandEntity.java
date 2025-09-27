@@ -1,8 +1,14 @@
 package com.wings.product.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "tb_product_brand")
 public class ProductBrandEntity {
     @Id
