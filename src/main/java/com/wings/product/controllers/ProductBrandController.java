@@ -1,6 +1,10 @@
 package com.wings.product.controllers;
 
+import com.wings.product.Dto.ProductBrandDto;
+import com.wings.product.Services.ProductBrandService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -8,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("product/brand")
 @Slf4j // for log
 public class ProductBrandController {
+    @Autowired
+    public ProductBrandService brandService ;
+
     @GetMapping("/hello")
     public String sayHello() {
         return "Hello World";
@@ -17,8 +24,9 @@ public class ProductBrandController {
         return " Hi docker" ;
     }
     @PostMapping("/create")
-    public void createProductBrand(){
-
+    public ResponseEntity<?> createProductBrand(@RequestBody ProductBrandDto brandDto){
+        brandService.ProductBrandSave(brandDto);
+        return ResponseEntity.ok(brandDto);
     }
     @GetMapping("/getAllBrands")
     public void getAllProductBrands(){}
