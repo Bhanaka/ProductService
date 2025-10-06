@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("product/brand")
@@ -16,23 +18,20 @@ public class ProductBrandController {
     @Autowired
     public ProductBrandService brandService ;
 
-    @GetMapping("/hello")
-    public String sayHello() {
-        return "Hello World";
-    }
-    @GetMapping("/docker")
-    public String createDocker(){
-        return " Hi docker" ;
-    }
     @PostMapping("/create")
     public ResponseEntity<ProductBrandEntity> createProductBrand(@RequestBody ProductBrandDto brandDto){
         ProductBrandEntity brand = brandService.ProductBrandSave(brandDto);
         return ResponseEntity.ok(brand);
     }
     @GetMapping("/getAllBrands")
-    public void getAllProductBrands(){}
+    public ResponseEntity<List<ProductBrandEntity>> getAllProductBrands(){
+        List<ProductBrandEntity> list = brandService.getBrands() ;
+        return ResponseEntity.ok(list);
+    }
     @GetMapping("/getById/{id}")
-    public void getProductBrandById(){}
+    public ProductBrandEntity getProductBrandById(@PathVariable Long id){
+        return brandService.getProductBrandById(id);
+    }
     @PutMapping("/update")
     public void updateProductBrand(){}
     @DeleteMapping("/delete")

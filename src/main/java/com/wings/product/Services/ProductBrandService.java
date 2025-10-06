@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class ProductBrandService {
     @Autowired
     public ProductBrandRepository productBrandRepository ;
+
     public ProductBrandEntity ProductBrandSave(ProductBrandDto newBrand){
         String brandName = newBrand.getProductBrandName() ;
         String brandCode = newBrand.getProductBrandCode() ;
@@ -49,10 +52,12 @@ public class ProductBrandService {
         brandEntity.setProductCode(brandCode);
         brandEntity.setProductName(brandName);
         brandEntity.setProductIsActive(brandIsActive);
-
         return productBrandRepository.save(brandEntity);
-
-
-
+    }
+    public List<ProductBrandEntity> getBrands(){
+        return  productBrandRepository.findAll() ;
+    }
+    public  ProductBrandEntity getProductBrandById(Long id){
+        return  productBrandRepository.findById(id).orElseThrow(() -> new RuntimeException("Brand not found with id: " + id));
     }
 }
