@@ -1,6 +1,10 @@
-com/wings/product/ProductServiceApplication.class
-com/wings/product/Services/ProductBrandService.class
-com/wings/product/Dto/ProductBrandDto.class
+com/wings/product/Entity/ProductItemEntity.class
+com/wings/product/controllers/ProductController.class
 com/wings/product/Repositorys/ProductBrandRepository.class
 com/wings/product/Entity/ProductBrandEntity.class
 com/wings/product/controllers/ProductBrandController.class
+com/wings/product/Dto/ProductRequestDto.class
+com/wings/product/ProductServiceApplication.class
+com/wings/product/Services/ProductBrandService.class
+com/wings/product/Dto/ProductBrandDto.class
+com/wings/product/configuration/SecurityConfig.class
