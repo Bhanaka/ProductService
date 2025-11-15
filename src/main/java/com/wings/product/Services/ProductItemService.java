@@ -3,6 +3,7 @@ package com.wings.product.Services;
 import com.wings.product.Dto.ProductRequestDto;
 import com.wings.product.Entity.ProductItemEntity;
 import com.wings.product.Repositorys.ProductItemRepository;
+import com.wings.product.exception.ProductListEmptyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class ProductItemService {
         List<ProductItemEntity> items = itemRepository.findAll();
 
         if(items.isEmpty()){
-            throw new RuntimeException("Product items list is Empty");
+            throw new ProductListEmptyException("Product items list is empty");
         }
         return  items;
     }
