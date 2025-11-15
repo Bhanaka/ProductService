@@ -8,29 +8,42 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductItemService {
     @Autowired
     public ProductItemRepository itemRepository ;
 
-//    public ResponseEntity<ProductItemEntity> createItem(ProductRequestDto requestDto){
-//        ProductItemEntity itemEntity = new ProductItemEntity();
-//        itemEntity.setProductCode(requestDto.getProductCode());
-//        itemEntity.setProductName(requestDto.getProductName());
-//        itemEntity.setProductDescription(requestDto.getProductDesc());
-//        itemEntity.setProductBuyPrice(requestDto.getProductBuyPrice());
-//        itemEntity.setProductSellingPrice(requestDto.getProductSellingPrice());
-//        itemEntity.setProductDiscount(requestDto.getProductDiscount());
-//        itemEntity.setProductIsActive(requestDto.getProductIsActive());
-//        itemEntity.setProductUserId(requestDto.getProductUserId());
-//        itemEntity.setProductBrandId(requestDto.getProductBrandId());
-//
-//        return itemRepository.save(itemEntity);
-//    }
+    public ProductItemEntity createItem(ProductRequestDto requestDto){
+
+        // check existing product code
+        if(itemRepository.existsByProductCode(requestDto.getProductCode())){
+            throw new RuntimeException("Product code already exists");
+        }
+        if(itemRepository.existsByProductName(requestDto.getProductName())){
+            throw new RuntimeException("Product name already exists");
+        }
+        ProductItemEntity itemEntity = new ProductItemEntity();
+
+        itemEntity.setProductCode(requestDto.getProductCode());
+        itemEntity.setProductName(requestDto.getProductName());
+        itemEntity.setProductDescription(requestDto.getProductDesc());
+        itemEntity.setProductBuyPrice(requestDto.getProductBuyPrice());
+        itemEntity.setProductSellingPrice(requestDto.getProductSellingPrice());
+        itemEntity.setProductDiscount(requestDto.getProductDiscount());
+        itemEntity.setProductIsActive(requestDto.getProductIsActive());
+        itemEntity.setProductUserId(requestDto.getProductUserId());
+        itemEntity.setProductBrandId(requestDto.getProductBrandId());
+        return itemRepository.save(itemEntity);
+    }
 
     public ProductItemEntity getItem(Long id){
-        return itemRepository.getById(id);
+        Optional<ProductItemEntity> item = itemRepository.findById(id);
+        if(item.isPresent()){
+            return item.get() ;
+        }else {
+            throw new RuntimeException("Product item not found for ID: " + id);        }
     }
     public List<ProductItemEntity>getAllItems(){
         List<ProductItemEntity> items = itemRepository.findAll();
@@ -40,7 +53,20 @@ public class ProductItemService {
         }
         return  items;
     }
-//    public ProductItemEntity updateItem(Long id ,ProductItemEntity updateItem){
-//        return
-//    }
+    public ProductItemEntity updateItem(Long id ,ProductRequestDto updateItem){
+        ProductItemEntity item = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product item not found for ID: " + id));
+
+        item.setProductCode(updateItem.getProductCode());
+        item.setProductName(updateItem.getProductName());
+        item.setProductDescription(updateItem.getProductDesc());
+        item.setProductBuyPrice(updateItem.getProductBuyPrice());
+        item.setProductSellingPrice(updateItem.getProductSellingPrice());
+        item.setProductDiscount(updateItem.getProductDiscount());
+        item.setProductIsActive(updateItem.getProductIsActive());
+        item.setProductUserId(updateItem.getProductUserId());
+        item.setProductBrandId(updateItem.getProductBrandId());
+
+        return itemRepository.save(item);
+    }
 }

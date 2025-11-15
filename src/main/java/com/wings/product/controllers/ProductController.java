@@ -22,40 +22,50 @@ public class ProductController {
         try{
             List<ProductItemEntity> items = itemService.getAllItems();
             //success response
-            ApiResponse<List<ProductItemEntity>> response = ApiResponse.<List<ProductItemEntity>>builder()
-                    .status("201")
-                    .message("Items fetched successfully")
-                    .data(items)
-                    .build();
-            return  ResponseEntity.ok(response);
+            return ResponseEntity.ok(ApiResponse.success(items, "Items fetched successfully"));
 
         } catch (RuntimeException e) {
             // Error response
-            ApiResponse<List<ProductItemEntity>> response = ApiResponse.<List<ProductItemEntity>>builder()
-                    .status("error")
-                    .message(e.getMessage())
-                    .data(null)
-                    .build();
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error(e.getMessage()));
         }
     }
-//    // create product
-//    @PostMapping("/create")
-//    public ResponseEntity<ProductItemEntity> createProduct(@RequestBody ProductRequestDto requestDto){
-//        return itemService.createItem(requestDto);
-//    }
-//    //get product by id
-//    @GetMapping("id/{id}")
-//    public ResponseEntity<ProductItemEntity> getById(@PathVariable Long id){
-//        return itemService.getItem(id);
-//    }
-//    // update product by id
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<ProductItemEntity> updateProduct(@PathVariable Long id ,@RequestBody ProductRequestDto requestDto){
-//        return itemService.updateItem(id,requestDto);
-//    }
+    // create product
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<ProductItemEntity>> createProduct(@RequestBody ProductRequestDto requestDto){
+        try{
+            //success response
+            ProductItemEntity item = itemService.createItem(requestDto);
+            return ResponseEntity.ok(ApiResponse.success(item , "Item created successfully"));
+        } catch (RuntimeException e) {
+            // Error response
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error(e.getMessage()));
+        }
+    }
+    //get product by id
+    @GetMapping("id/{id}")
+    public ResponseEntity<ApiResponse<ProductItemEntity>> getById(@PathVariable Long id){
+        try {
+            ProductItemEntity itemEntity = itemService.getItem(id) ;
+            return ResponseEntity.ok(ApiResponse.success(itemEntity , "get item by id"));
+        } catch (RuntimeException e) {
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error(e.getMessage()));
+        }
+    }
+    // update product by id
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ApiResponse<ProductItemEntity>> updateProduct(@PathVariable Long id ,@RequestBody ProductRequestDto requestDto){
+        try{
+            ProductItemEntity item = itemService.updateItem(id,requestDto);
+            return ResponseEntity.ok(ApiResponse.success(item ,"successfully update"));
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error(e.getMessage()));
+        }
+    }
 //    // delete product by id
 //    @DeleteMapping("/delete")
 //    public void deleteProduct(){}
