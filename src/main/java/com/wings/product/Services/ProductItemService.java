@@ -3,9 +3,11 @@ package com.wings.product.Services;
 import com.wings.product.Dto.ProductRequestDto;
 import com.wings.product.Entity.ProductItemEntity;
 import com.wings.product.Repositorys.ProductItemRepository;
+import com.wings.product.exception.DuplicateProductCodeException;
+import com.wings.product.exception.DuplicateProductNameException;
 import com.wings.product.exception.ProductListEmptyException;
+import com.wings.product.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,10 +22,10 @@ public class ProductItemService {
 
         // check existing product code
         if(itemRepository.existsByProductCode(requestDto.getProductCode())){
-            throw new RuntimeException("Product code already exists");
+            throw new DuplicateProductCodeException("Product code already exists");
         }
         if(itemRepository.existsByProductName(requestDto.getProductName())){
-            throw new RuntimeException("Product name already exists");
+            throw new DuplicateProductNameException("Product name already exists");
         }
         ProductItemEntity itemEntity = new ProductItemEntity();
 
@@ -44,11 +46,10 @@ public class ProductItemService {
         if(item.isPresent()){
             return item.get() ;
         }else {
-            throw new RuntimeException("Product item not found for ID: " + id);        }
+            throw new ProductNotFoundException("Product item not found for ID: " + id);        }
     }
     public List<ProductItemEntity>getAllItems(){
         List<ProductItemEntity> items = itemRepository.findAll();
-
         if(items.isEmpty()){
             throw new ProductListEmptyException("Product items list is empty");
         }
@@ -56,7 +57,7 @@ public class ProductItemService {
     }
     public ProductItemEntity updateItem(Long id ,ProductRequestDto updateItem){
         ProductItemEntity item = itemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product item not found for ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException("Product item not found for ID: " + id));
 
         item.setProductCode(updateItem.getProductCode());
         item.setProductName(updateItem.getProductName());
@@ -69,5 +70,11 @@ public class ProductItemService {
         item.setProductBrandId(updateItem.getProductBrandId());
 
         return itemRepository.save(item);
+    }
+    public Long deleteItem (Long id){
+        ProductItemEntity deleteItem = itemRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product item not found for ID: " + id));
+        deleteItem.setId(id);
+        return itemRepository.deleteItem(id);
     }
 }

@@ -19,54 +19,37 @@ public class ProductController {
     // get all products
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<ProductItemEntity>>> getAllProduct(){
-//        try{
             List<ProductItemEntity> items = itemService.getAllItems();
-            //success response
-            return ResponseEntity.ok(ApiResponse.success(200,items, "Items fetched successfully"));
-//
-//        } catch (RuntimeException e) {
-//            // Error response
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(ApiResponse.error(e.getMessage()));
-//        }
+            return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK.value(),items, "Items fetched successfully")); // 200 ok
+
     }
     // create product
-//    @PostMapping("/create")
-//    public ResponseEntity<ApiResponse<ProductItemEntity>> createProduct(@RequestBody ProductRequestDto requestDto){
-//        try{
-//            //success response
-//            ProductItemEntity item = itemService.createItem(requestDto);
-//            return ResponseEntity.ok(ApiResponse.success(item , "Item created successfully"));
-//        } catch (RuntimeException e) {
-//            // Error response
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(ApiResponse.error(e.getMessage()));
-//        }
-//    }
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<ProductItemEntity>> createProduct(@RequestBody ProductRequestDto requestDto){
+            //success response
+            ProductItemEntity item = itemService.createItem(requestDto);
+            return ResponseEntity.ok(ApiResponse.success(HttpStatus.CREATED.value(), item , "Item created successfully")); //201 create
+    }
     //get product by id
-//    @GetMapping("id/{id}")
-//    public ResponseEntity<ApiResponse<ProductItemEntity>> getById(@PathVariable Long id){
-//        try {
-//            ProductItemEntity itemEntity = itemService.getItem(id) ;
-//            return ResponseEntity.ok(ApiResponse.success(itemEntity , "get item by id"));
-//        } catch (RuntimeException e) {
-//            return  ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(ApiResponse.error(e.getMessage()));
-//        }
-//    }
+    @GetMapping("id/{id}")
+    public ResponseEntity<ApiResponse<ProductItemEntity>> getById(@PathVariable Long id){
+            // success response
+            ProductItemEntity itemEntity = itemService.getItem(id);
+            return ResponseEntity.ok(ApiResponse.success(HttpStatus.CREATED.value(),itemEntity ,"Item fetched successfully"));
+    }
     // update product by id
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<ApiResponse<ProductItemEntity>> updateProduct(@PathVariable Long id ,@RequestBody ProductRequestDto requestDto){
-//        try{
-//            ProductItemEntity item = itemService.updateItem(id,requestDto);
-//            return ResponseEntity.ok(ApiResponse.success(item ,"successfully update"));
-//
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(ApiResponse.error(e.getMessage()));
-//        }
-//    }
-//    // delete product by id
-//    @DeleteMapping("/delete")
-//    public void deleteProduct(){}
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ApiResponse<ProductItemEntity>> updateProduct(@PathVariable Long id ,@RequestBody ProductRequestDto requestDto){
+            // success response
+            ProductItemEntity item = itemService.updateItem(id,requestDto);
+            return ResponseEntity.ok(ApiResponse.success(HttpStatus.CREATED.value() ,item ,"Item updated successfully "));
+    }
+    // delete product by id
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse<Long>> deleteProduct(@PathVariable  Long id){
+        // success response
+        Long item = itemService.deleteItem(id) ;
+        return ResponseEntity.ok(ApiResponse.success(HttpStatus.CONTINUE.value(), item , "Item deleted successfully"));
+
+    }
 }
